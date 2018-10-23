@@ -4,15 +4,15 @@ const prerender = require('prerender');
 
 const server = prerender({
   // location for ubuntu server. comment chromeLocation and chromeFlags for your local dev machine
-  //   chromeLocation: '/opt/google/chrome/chrome',
-  //   chromeFlags: [
-  //     '--no-sandbox',
-  //     '--headless',
-  //     '--disable-gpu',
-  //     '--remote-debugging-port=9222',
-  //     '--hide-scrollbars',
-  //     '--disable-setuid-sandbox'
-  //   ]
+  chromeLocation: '/opt/google/chrome/chrome',
+  chromeFlags: [
+    '--no-sandbox',
+    '--headless',
+    '--disable-gpu',
+    '--remote-debugging-port=9222',
+    '--hide-scrollbars',
+    '--disable-setuid-sandbox'
+  ]
   //   logRequests: true
 });
 
