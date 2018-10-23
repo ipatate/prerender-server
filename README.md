@@ -9,6 +9,17 @@ You have htaccess example for your web app server. Others examples for nginx are
 
 For your local machine, no problem. Install juste chrome browser.
 
+# init project
+
+```
+yarn
+```
+or
+
+```
+npm install
+```
+
 For server, you have exemple here [https://blog.softhints.com/ubuntu-16-04-server-install-headless-google-chrome/](https://blog.softhints.com/ubuntu-16-04-server-install-headless-google-chrome/)
 
 ## 1 - example with express server and puppeteer. Actually index.js and ssr.js
@@ -36,6 +47,15 @@ Example for apache, use this virtual host config for redirect request to node se
 
 Add directory with index.html for DocumentRoot. If node server is down, apache return this index.
 
+Enabling Necessary Apache Modules
+
+```
+sudo a2enmod proxy
+sudo a2enmod proxy_http
+```
+
+Create virtual host
+
 ```
 <VirtualHost *:443>
     ServerAdmin webmaster@localhost
@@ -51,12 +71,22 @@ ProxyRequests Off
 </VirtualHost>
 ```
 
+Active virtual host
+```
+sudo a2ensite file.conf
+```
+
 ### Node
 
-For run node, use PM2 : [https://pm2.io](https://pm2.io)
-
+For run node on server, i recommand PM2 : [https://pm2.io](https://pm2.io)
+Install with :
 ```
 npm install -g pm2
+```
+
+run server in prerender directory with this cmd :
+```
+pm2 start
 ```
 
 # Web app
