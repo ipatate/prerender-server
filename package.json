@@ -1,0 +1,21 @@
+{
+  "name": "prerender-exemple",
+  "version": "1.0.0",
+  "description": "Example prerender server for render html from web app. Used for SEO robot.",
+  "main": "index.js",
+  "author": "Faramaz Patrick",
+  "license": "ISC",
+  "scripts": {
+    "start": "PORT=443 node index.js"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "node-cache": "^4.2.0",
+    "prerender": "^5.4.4",
+    "prerender-memory-cache": "^1.0.2",
+    "prerender-node": "^3.2.1",
+    "prerender-redis-cache": "^0.2.0",
+    "puppeteer": "^1.9.0",
+    "puppeteer-prerender": "^0.6.3"
+  }
+}
