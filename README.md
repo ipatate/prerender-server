@@ -29,6 +29,9 @@ use prerender-index.js for launch prerender system
 
 ### Apache
 
+You can use for internal request server from localhost:8000.
+
+For external request, you must configure server.
 Example for apache, use this virtual host config for redirect request to node server.
 
 Add directory with index.html for DocumentRoot. If node server is down, apache return this index.
