@@ -79,4 +79,4 @@ async function ssr(url, renderType) {
   return result;
 }
 
-exports.default = ssr;
+module.exports = ssr;
