@@ -1,5 +1,5 @@
 const express = require('express');
-const ssr = require('./ssr');
+const ssr = require('./lib/ssr');
 
 const PORT = process.env.PORT || 8000;
 

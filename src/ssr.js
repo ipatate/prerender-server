@@ -1,3 +1,4 @@
+// @flow
 const puppeteer = require('puppeteer');
 const NodeCache = require('node-cache');
 
@@ -8,7 +9,7 @@ const ssrCache = new NodeCache({
 const renderTypeOptions = ['html', 'jpeg', 'png', 'pdf'];
 
 // verif if type is allowed
-const getRenderType = renderType => {
+const getRenderType = (renderType: string): string => {
   let type = 'html';
   if (renderTypeOptions.indexOf(renderType) > -1) {
     type = renderType;
@@ -16,7 +17,7 @@ const getRenderType = renderType => {
   return type;
 };
 
-async function ssr(url, renderType) {
+async function ssr(url: string, renderType: string) {
   const type = getRenderType(renderType);
 
   const keyCache = `${url}${type}`;
