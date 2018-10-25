@@ -11,7 +11,8 @@
     "flow": "flow",
     "format": "prettier --write \"**/*.+(js|jsx||json|yml|yaml|css|scss|ts|tsx|graphql|vue)\" ",
     "flow:build": "flow-remove-types ./src/ -d ./lib/ --all --pretty",
-    "precommit": "yarn lint && yarn format && yarn flow"
+    "validate": "yarn lint && yarn format --list-different && yarn flow",
+    "precommit": "yarn validate"
   },
   "dependencies": {
     "express": "^4.16.4",
