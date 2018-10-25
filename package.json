@@ -9,7 +9,9 @@
     "start": "yarn flow:build && PORT=8000 node index.js",
     "lint": "eslint src",
     "flow": "flow",
-    "flow:build": "flow-remove-types ./src/ -d ./lib/ --all --pretty"
+    "format": "prettier --write \"**/*.+(js|jsx||json|yml|yaml|css|scss|ts|tsx|graphql|vue)\" ",
+    "flow:build": "flow-remove-types ./src/ -d ./lib/ --all --pretty",
+    "precommit": "yarn lint && yarn format && yarn flow"
   },
   "dependencies": {
     "express": "^4.16.4",
@@ -19,12 +21,16 @@
     "prerender-memory-cache": "^1.0.2",
     "prerender-node": "^3.2.1",
     "prerender-redis-cache": "^0.2.0",
+    "prettier": "^1.14.3",
     "puppeteer": "^1.9.0",
     "puppeteer-prerender": "^0.6.3"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "eslint": "^5.7.0",
-    "flow-bin": "^0.84.0"
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-flowtype": "^3.0.0",
+    "flow-bin": "^0.84.0",
+    "husky": "^1.1.2"
   }
 }

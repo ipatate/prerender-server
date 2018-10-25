@@ -3,7 +3,12 @@
   "parserOptions": {
     "ecmaVersion": 2018
   },
-  "extends": "eslint:recommended",
+  "plugins": ["flowtype"],
+  "extends": [
+    "eslint:recommended",
+    "eslint-config-prettier",
+    "plugin:flowtype/recommended"
+  ],
   "env": {
     "node": true
   }

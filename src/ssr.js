@@ -3,7 +3,7 @@ const puppeteer = require('puppeteer');
 const NodeCache = require('node-cache');
 
 const ssrCache = new NodeCache({
-  stdTTL: 5000
+  stdTTL: 5000,
 });
 
 const renderTypeOptions = ['html', 'jpeg', 'png', 'pdf'];
@@ -17,7 +17,7 @@ const getRenderType = (renderType: string): string => {
   return type;
 };
 
-async function ssr(url: string, renderType: string): string {
+async function ssr(url: string, renderType: string): Promise<string> {
   const type = getRenderType(renderType);
 
   const keyCache = `${url}${type}`;
@@ -35,8 +35,8 @@ async function ssr(url: string, renderType: string): string {
       '--disable-gpu',
       '--remote-debugging-port=9222',
       '--hide-scrollbars',
-      '--disable-setuid-sandbox'
-    ]
+      '--disable-setuid-sandbox',
+    ],
   });
   // new page
   const page = await browser.newPage();
@@ -44,7 +44,7 @@ async function ssr(url: string, renderType: string): string {
     // networkidle0 waits for the network to be idle (no requests for 500ms).
     // The page's JS has likely produced markup by this point, but wait longer
     // if your site lazy loads, etc.
-    await page.goto(url, { waitUntil: 'networkidle0' });
+    await page.goto(url, {waitUntil: 'networkidle0'});
   } catch (err) {
     throw err;
     // console.error(err);
@@ -58,13 +58,13 @@ async function ssr(url: string, renderType: string): string {
     case 'png':
       result = await page.screenshot({
         type,
-        fullPage: true
+        fullPage: true,
       });
       break;
     case 'jpeg':
       result = await page.screenshot({
         type,
-        fullPage: true
+        fullPage: true,
       });
       break;
     case 'pdf':
