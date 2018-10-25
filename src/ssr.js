@@ -17,7 +17,7 @@ const getRenderType = (renderType: string): string => {
   return type;
 };
 
-async function ssr(url: string, renderType: string) {
+async function ssr(url: string, renderType: string): string {
   const type = getRenderType(renderType);
 
   const keyCache = `${url}${type}`;
@@ -46,7 +46,8 @@ async function ssr(url: string, renderType: string) {
     // if your site lazy loads, etc.
     await page.goto(url, { waitUntil: 'networkidle0' });
   } catch (err) {
-    console.error(err);
+    throw err;
+    // console.error(err);
   }
 
   let result = '';

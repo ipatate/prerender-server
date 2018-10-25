@@ -7,6 +7,7 @@
   "license": "ISC",
   "scripts": {
     "start": "yarn flow:build && PORT=8000 node index.js",
+    "lint": "eslint src",
     "flow": "flow",
     "flow:build": "flow-remove-types ./src/ -d ./lib/ --all --pretty"
   },
@@ -22,6 +23,8 @@
     "puppeteer-prerender": "^0.6.3"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.7.0",
     "flow-bin": "^0.84.0"
   }
 }
