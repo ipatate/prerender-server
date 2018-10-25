@@ -1,6 +1,6 @@
 {
     "linters": {
-        "*.js" [
+        "*.js": [
             "eslint"
         ],
         "**/*.+(js|jsx||json|yml|yaml|css|scss|ts|tsx|graphql|vue)": [
