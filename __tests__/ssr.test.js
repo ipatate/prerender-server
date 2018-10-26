@@ -1,8 +1,19 @@
-import {getRenderType} from '../src/ssr';
+import {getRenderType, ssr} from '../src/ssr';
 
 test('test getRenderType', () => {
-  const type = ['html', 'jpeg', 'png', 'pdf'];
-  expect(getRenderType('html', type)).toBe('html');
-  expect(getRenderType('png', type)).toBe('png');
-  expect(getRenderType('plop', type)).toBe('html');
+  const types = ['html', 'jpeg', 'png', 'pdf'];
+  expect(getRenderType('html', types)).toBe('html');
+  expect(getRenderType('png', types)).toBe('png');
+  // type not exist in list types
+  expect(getRenderType('plop', types)).toBe('html');
+});
+
+test('test ssr function with html', async () => {
+  const result = await ssr('/', 'html');
+  expect(result).toBe('<html><body></body></html>');
+});
+
+test('test ssr function with no type arg', async () => {
+  const result = await ssr('/');
+  expect(result).toBe('<html><body></body></html>');
 });

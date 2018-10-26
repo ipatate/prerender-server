@@ -1,4 +1,8 @@
 [ignore]
+./dist
+./node_modules
+index.js
+__tests__
 [include]
 
 [libs]

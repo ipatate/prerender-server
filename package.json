@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "@babel/core": "^7.1.2",
+    "D": "^1.0.0",
+    "eslint-plugin-promise": "^4.0.1",
     "express": "^4.16.4",
     "flow-remove-types": "^1.2.3",
     "lint-staged": "^7.3.0",

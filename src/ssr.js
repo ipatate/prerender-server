@@ -10,7 +10,7 @@ const renderTypeOptions = ['html', 'jpeg', 'png', 'pdf'];
 
 // verif if type is allowed
 export const getRenderType = (
-  renderType: string,
+  renderType: string = '',
   options: Array<string>,
 ): string => {
   let type = 'html';
@@ -20,9 +20,8 @@ export const getRenderType = (
   return type;
 };
 
-async function ssr(url: string, renderType: string): Promise<string> {
+export async function ssr(url: string, renderType: string): Promise<string> {
   const type: string = getRenderType(renderType, renderTypeOptions);
-
   const keyCache: string = `${url}${type}`;
   // if cache return
   const cacheUrl: ?string = ssrCache.get(keyCache);

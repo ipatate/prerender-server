@@ -3,15 +3,17 @@
   "parserOptions": {
     "ecmaVersion": 2018
   },
-  "plugins": ["flowtype", "jest"],
+  "plugins": ["flowtype", "jest", "promise"],
   "extends": [
     "eslint:recommended",
     "eslint-config-prettier",
     "plugin:flowtype/recommended",
-    "plugin:jest/recommended"
+    "plugin:jest/recommended",
+    "plugin:promise/recommended"
   ],
   "env": {
     "node": true,
+    "es6": true,
     "jest/globals": true
   }
 }
