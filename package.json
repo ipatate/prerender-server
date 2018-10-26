@@ -15,7 +15,7 @@
     "format": "prettier --write \"**/*.+(js|jsx||json|yml|yaml|css|scss|ts|tsx|graphql|vue)\" ",
     "flow:build": "flow-remove-types ./src/ -d ./dist/ --all --pretty",
     "validate": "yarn lint && yarn test && yarn flow",
-    "precommit": "lint-staged && yarn flow"
+    "precommit": "lint-staged && yarn test && yarn flow"
   },
   "dependencies": {
     "@babel/core": "^7.1.2",
