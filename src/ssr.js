@@ -1,6 +1,6 @@
 // @flow
-const puppeteer = require('puppeteer');
-const NodeCache = require('node-cache');
+import puppeteer from 'puppeteer';
+import NodeCache from 'node-cache';
 
 const ssrCache = new NodeCache({
   stdTTL: 5000,
@@ -9,21 +9,24 @@ const ssrCache = new NodeCache({
 const renderTypeOptions = ['html', 'jpeg', 'png', 'pdf'];
 
 // verif if type is allowed
-const getRenderType = (renderType: string): string => {
+export const getRenderType = (
+  renderType: string,
+  options: Array<string>,
+): string => {
   let type = 'html';
-  if (renderTypeOptions.indexOf(renderType) > -1) {
+  if (options.indexOf(renderType) > -1) {
     type = renderType;
   }
   return type;
 };
 
 async function ssr(url: string, renderType: string): Promise<string> {
-  const type = getRenderType(renderType);
+  const type: string = getRenderType(renderType, renderTypeOptions);
 
-  const keyCache = `${url}${type}`;
+  const keyCache: string = `${url}${type}`;
   // if cache return
-  const cacheUrl = ssrCache.get(keyCache);
-  if (cacheUrl !== undefined) {
+  const cacheUrl: ?string = ssrCache.get(keyCache);
+  if (cacheUrl !== undefined && cacheUrl !== null) {
     return cacheUrl;
   }
   // launch browser
@@ -81,4 +84,4 @@ async function ssr(url: string, renderType: string): Promise<string> {
   return result;
 }
 
-module.exports = ssr;
+export default ssr;

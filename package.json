@@ -6,17 +6,22 @@
   "author": "Faramaz Patrick",
   "license": "ISC",
   "scripts": {
-    "start": "yarn flow:build && PORT=8000 node index.js",
+    "test": "jest",
+    "start": "yarn build && PORT=8000 node index.js",
+    "build": "babel src --out-dir dist",
+    "dev": "nodemon --watch src --exec \"yarn flow && yarn build && PORT=8000 node index.js\"",
     "lint": "eslint src",
     "flow": "flow",
     "format": "prettier --write \"**/*.+(js|jsx||json|yml|yaml|css|scss|ts|tsx|graphql|vue)\" ",
     "flow:build": "flow-remove-types ./src/ -d ./lib/ --all --pretty",
-    "validate": "yarn lint && yarn format --list-different && yarn flow",
-    "precommit": "yarn validate"
+    "validate": "yarn lint && yarn test && yarn flow",
+    "precommit": "lint-staged && yarn flow"
   },
   "dependencies": {
+    "@babel/core": "^7.1.2",
     "express": "^4.16.4",
     "flow-remove-types": "^1.2.3",
+    "lint-staged": "^7.3.0",
     "node-cache": "^4.2.0",
     "prerender": "^5.4.4",
     "prerender-memory-cache": "^1.0.2",
@@ -27,11 +32,22 @@
     "puppeteer-prerender": "^0.6.3"
   },
   "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/node": "^7.0.0",
+    "@babel/plugin-syntax-flow": "^7.0.0",
+    "@babel/plugin-transform-flow-strip-types": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
     "eslint": "^5.7.0",
     "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-flowtype": "^3.0.0",
+    "eslint-plugin-jest": "^21.26.1",
     "flow-bin": "^0.84.0",
-    "husky": "^1.1.2"
+    "husky": "^1.1.2",
+    "jest": "^23.6.0",
+    "nodemon": "^1.18.5"
   }
 }

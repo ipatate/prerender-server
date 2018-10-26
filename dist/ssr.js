@@ -1,33 +1,46 @@
-//
-const puppeteer = require('puppeteer');
-const NodeCache = require('node-cache');
+'use strict';
 
-const ssrCache = new NodeCache({
+Object.defineProperty(exports, '__esModule', {
+  value: true,
+});
+exports.default = exports.getRenderType = void 0;
+
+var _puppeteer = _interopRequireDefault(require('puppeteer'));
+
+var _nodeCache = _interopRequireDefault(require('node-cache'));
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : {default: obj};
+}
+
+const ssrCache = new _nodeCache.default({
   stdTTL: 5000,
 });
+const renderTypeOptions = ['html', 'jpeg', 'png', 'pdf']; // verif if type is allowed
 
-const renderTypeOptions = ['html', 'jpeg', 'png', 'pdf'];
-
-// verif if type is allowed
-const getRenderType = renderType => {
+const getRenderType = (renderType, options) => {
   let type = 'html';
-  if (renderTypeOptions.indexOf(renderType) > -1) {
+
+  if (options.indexOf(renderType) > -1) {
     type = renderType;
   }
+
   return type;
 };
 
-async function ssr(url, renderType) {
-  const type = getRenderType(renderType);
+exports.getRenderType = getRenderType;
 
-  const keyCache = `${url}${type}`;
-  // if cache return
+async function ssr(url, renderType) {
+  const type = getRenderType(renderType, renderTypeOptions);
+  const keyCache = `${url}${type}`; // if cache return
+
   const cacheUrl = ssrCache.get(keyCache);
-  if (cacheUrl !== undefined) {
+
+  if (cacheUrl !== undefined && cacheUrl !== null) {
     return cacheUrl;
-  }
-  // launch browser
-  const browser = await puppeteer.launch({
+  } // launch browser
+
+  const browser = await _puppeteer.default.launch({
     headless: true,
     args: [
       '--no-sandbox',
@@ -37,47 +50,56 @@ async function ssr(url, renderType) {
       '--hide-scrollbars',
       '--disable-setuid-sandbox',
     ],
-  });
-  // new page
+  }); // new page
+
   const page = await browser.newPage();
+
   try {
     // networkidle0 waits for the network to be idle (no requests for 500ms).
     // The page's JS has likely produced markup by this point, but wait longer
     // if your site lazy loads, etc.
-    await page.goto(url, {waitUntil: 'networkidle0'});
+    await page.goto(url, {
+      waitUntil: 'networkidle0',
+    });
   } catch (err) {
-    console.error(err);
+    throw err; // console.error(err);
   }
 
   let result = '';
+
   switch (type) {
     case 'html':
       result = await page.content();
       break;
+
     case 'png':
       result = await page.screenshot({
         type,
         fullPage: true,
       });
       break;
+
     case 'jpeg':
       result = await page.screenshot({
         type,
         fullPage: true,
       });
       break;
+
     case 'pdf':
       result = await page.pdf();
       break;
+
     default:
       result = await page.content();
       break;
   }
-  await browser.close();
 
+  await browser.close();
   ssrCache.set(keyCache, result); // cache rendered page.
 
   return result;
 }
 
-module.exports = ssr;
+var _default = ssr;
+exports.default = _default;
