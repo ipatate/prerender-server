@@ -8,8 +8,7 @@
     "eslint:recommended",
     "eslint-config-prettier",
     "plugin:flowtype/recommended",
-    "plugin:jest/recommended",
-    "plugin:promise/recommended"
+    "plugin:jest/recommended"
   ],
   "env": {
     "node": true,

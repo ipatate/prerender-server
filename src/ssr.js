@@ -77,7 +77,6 @@ export async function ssr(url: string, renderType: string): Promise<string> {
       break;
   }
   await browser.close();
-
   ssrCache.set(keyCache, result); // cache rendered page.
 
   return result;
