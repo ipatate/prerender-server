@@ -3,8 +3,8 @@ const result = '<html><body></body></html>';
 const page = {
   content: () => Promise.resolve(result),
   goto: () => Promise.resolve(),
-  screenshot: () => Promise.resolve(result),
-  pdf: () => Promise.resolve(result),
+  screenshot: () => Promise.resolve('picture'),
+  pdf: () => Promise.resolve('pdf'),
 };
 
 const browser = {
