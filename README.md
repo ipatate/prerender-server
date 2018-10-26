@@ -109,7 +109,7 @@ params :
 - renderType : html (default), png, jpeg, pdf
 
 ```
-curl http://localhost:8000/?url=http://exemple.com -w %{time_connect}:%{time_starttransfer}:%{time_total}
+curl http://localhost:8000/render?url=http://exemple.com -w %{time_connect}:%{time_starttransfer}:%{time_total}
 ```
 
 ### For prerender
