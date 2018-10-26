@@ -14,4 +14,5 @@ projectFilesBackup
 .tmp
 .env
 
+dist/
 ecosystem.config.js
