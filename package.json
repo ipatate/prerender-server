@@ -13,7 +13,7 @@
     "lint": "eslint src",
     "flow": "flow",
     "format": "prettier --write \"**/*.+(js|jsx||json|yml|yaml|css|scss|ts|tsx|graphql|vue)\" ",
-    "flow:build": "flow-remove-types ./src/ -d ./lib/ --all --pretty",
+    "flow:build": "flow-remove-types ./src/ -d ./dist/ --all --pretty",
     "validate": "yarn lint && yarn test && yarn flow",
     "precommit": "lint-staged && yarn flow"
   },
