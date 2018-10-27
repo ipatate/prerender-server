@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/ipatate/prerender-server-example?branch=master)](https://travis-ci.org/ipatate/prerender-server-example)
+[![Build Status](https://travis-ci.org/ipatate/prerender-server-example.svg?branch=master)](https://travis-ci.org/ipatate/prerender-server-example)
 
 # Example prerender server for web app
 
