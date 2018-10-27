@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ipatate/prerender-server-example?branch=master)](https://travis-ci.org/ipatate/prerender-server-example)
+
 # Example prerender server for web app
 
 If crawler visit your web app, the htaccess return prerender response instead web app response. The prerender return the html complete.
