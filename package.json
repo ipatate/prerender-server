@@ -12,7 +12,7 @@
     "dev": "nodemon --watch src --exec \"yarn flow && yarn build && PORT=8000 node index.js\"",
     "lint": "eslint src",
     "flow": "flow",
-    "format": "prettier --write \"**/*.+(js|jsx||json|yml|yaml|css|scss|ts|tsx|graphql|vue)\" ",
+    "format": "prettier --write \"**/*.+(js|jsx||json|yml|yaml|css|scss|ts|tsx|graphql|vue|mjs)\" ",
     "flow:build": "flow-remove-types ./src/ -d ./dist/ --all --pretty",
     "validate": "yarn lint && yarn test && yarn flow",
     "precommit": "lint-staged && yarn test && yarn flow"
