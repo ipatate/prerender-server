@@ -15,6 +15,8 @@ const server = prerender({
   ],
   //   logRequests: true
 });
+server.use(prerender.removeScriptTags());
+server.use(prerender.blockResources());
 
 // exemple for add cache response
 server.use(require('prerender-memory-cache'));
