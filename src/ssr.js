@@ -39,10 +39,10 @@ export async function ssr(url: string, renderType: string): Promise<string> {
   const type: string = getRenderType(renderType, renderTypeOptions);
   const keyCache: string = `${url}${type}`;
   // if cache return
-  //   const cacheUrl: ?string = ssrCache.get(keyCache);
-  //   if (cacheUrl !== undefined && cacheUrl !== null) {
-  //     return cacheUrl;
-  //   }
+  const cacheUrl: ?string = ssrCache.get(keyCache);
+  if (cacheUrl !== undefined && cacheUrl !== null) {
+    return cacheUrl;
+  }
   if (!browserWSEndpoint) {
     const browserAlreadyStarted = await getBrowser();
     browserWSEndpoint = await browserAlreadyStarted.wsEndpoint();
