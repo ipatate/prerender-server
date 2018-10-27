@@ -2,6 +2,8 @@
 import puppeteer from 'puppeteer';
 import NodeCache from 'node-cache';
 
+let browserWSEndpoint = null;
+
 const ssrCache = new NodeCache({
   stdTTL: 5000,
 });
@@ -20,28 +22,50 @@ export const getRenderType = (
   return type;
 };
 
-export async function ssr(url: string, renderType: string): Promise<string> {
-  const type: string = getRenderType(renderType, renderTypeOptions);
-  const keyCache: string = `${url}${type}`;
-  // if cache return
-  const cacheUrl: ?string = ssrCache.get(keyCache);
-  if (cacheUrl !== undefined && cacheUrl !== null) {
-    return cacheUrl;
-  }
-  // launch browser
-  const browser = await puppeteer.launch({
+export const getBrowser = async () =>
+  await puppeteer.launch({
     headless: true,
     args: [
       '--no-sandbox',
       '--headless',
-      '--disable-gpu',
-      '--remote-debugging-port=9222',
-      '--hide-scrollbars',
-      '--disable-setuid-sandbox',
+      //   '--disable-gpu',
+      //   '--remote-debugging-port=9222',
+      //   '--hide-scrollbars',
+      //   '--disable-setuid-sandbox',
     ],
   });
+
+export async function ssr(url: string, renderType: string): Promise<string> {
+  const type: string = getRenderType(renderType, renderTypeOptions);
+  const keyCache: string = `${url}${type}`;
+  // if cache return
+  //   const cacheUrl: ?string = ssrCache.get(keyCache);
+  //   if (cacheUrl !== undefined && cacheUrl !== null) {
+  //     return cacheUrl;
+  //   }
+  if (!browserWSEndpoint) {
+    const browserAlreadyStarted = await getBrowser();
+    browserWSEndpoint = await browserAlreadyStarted.wsEndpoint();
+  }
+  // get browser
+  const browser = await puppeteer.connect({browserWSEndpoint});
+
   // new page
   const page = await browser.newPage();
+
+  // 1. Intercept network requests.
+  await page.setRequestInterception(true);
+  page.on('request', req => {
+    // 2. Ignore requests for resources that don't produce DOM
+    // (images, stylesheets, media).
+    const whitelist = ['document', 'script', 'xhr', 'fetch'];
+    if (!whitelist.includes(req.resourceType())) {
+      return req.abort();
+    }
+    // 3. Pass through all other requests.
+    req.continue();
+  });
+
   try {
     // networkidle0 waits for the network to be idle (no requests for 500ms).
     // The page's JS has likely produced markup by this point, but wait longer
@@ -76,7 +100,7 @@ export async function ssr(url: string, renderType: string): Promise<string> {
       result = await page.content();
       break;
   }
-  await browser.close();
+  await page.close();
   ssrCache.set(keyCache, result); // cache rendered page.
 
   return result;
