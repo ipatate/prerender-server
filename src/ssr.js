@@ -58,6 +58,7 @@ export async function ssr(url: string, renderType: string): Promise<string> {
   page.on('request', req => {
     // 2. Ignore requests for resources that don't produce DOM
     // (images, stylesheets, media).
+
     const whitelist = ['document', 'script', 'xhr', 'fetch'];
     if (!whitelist.includes(req.resourceType())) {
       return req.abort();
