@@ -2,10 +2,16 @@
 import puppeteer from 'puppeteer';
 import NodeCache from 'node-cache';
 
+const TTL = process.env.TTL || 5000;
+// networkidle0 - consider navigation to be finished when there are no more than 0 network connections for at least 500 ms.
+// networkidle2 - consider navigation to be finished when there are no more than 2 network connections for at least 500 ms.
+const networkidle = process.env.networkidle || 'networkidle2';
+const browserArg = process.env.browserArg || `'--no-sandbox','--headless'`;
+
 let browserWSEndpoint = null;
 
 const ssrCache = new NodeCache({
-  stdTTL: process.env.TTL || 5000,
+  stdTTL: TTL,
 });
 
 const renderTypeOptions = ['html', 'jpeg', 'png', 'pdf'];
@@ -26,14 +32,7 @@ export const getRenderType = (
 const launch = async (): puppeteer.Browser =>
   await puppeteer.launch({
     headless: true,
-    args: [
-      '--no-sandbox',
-      '--headless',
-      //   '--disable-gpu',
-      //   '--remote-debugging-port=9222',
-      //   '--hide-scrollbars',
-      //   '--disable-setuid-sandbox',
-    ],
+    args: browserArg.split(','),
   });
 
 // get page for navigate
@@ -90,15 +89,17 @@ export async function ssr(url: string, renderType: string): Promise<string> {
   const type: string = getRenderType(renderType, renderTypeOptions);
   const keyCache: string = `${url}${type}`;
   // if cache return
-  const cacheUrl: ?string = ssrCache.get(keyCache);
-  if (cacheUrl !== undefined && cacheUrl !== null) {
-    return cacheUrl;
-  }
+  //   const cacheUrl: ?string = ssrCache.get(keyCache);
+  //   if (cacheUrl !== undefined && cacheUrl !== null) {
+  //     return cacheUrl;
+  //   }
   // launch browser and get page
   const page = await getPage();
+  // block request for image, css, media
   filterPageRequest(page);
+
   try {
-    await page.goto(url, {waitUntil: 'networkidle0'});
+    await page.goto(url, {waitUntil: networkidle});
   } catch (err) {
     throw err;
   }
