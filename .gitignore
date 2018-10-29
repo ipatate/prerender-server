@@ -7,12 +7,12 @@ bower_components
 *.iml
 *.sublime-*
 projectFilesBackup
-
 .DS_Store
 .build
 .dist
 .tmp
 .env
 
+coverage
 dist/
 ecosystem.config.js
