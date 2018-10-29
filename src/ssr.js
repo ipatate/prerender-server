@@ -5,7 +5,7 @@ import NodeCache from 'node-cache';
 let browserWSEndpoint = null;
 
 const ssrCache = new NodeCache({
-  stdTTL: 5000,
+  stdTTL: process.env.TTL || 5000,
 });
 
 const renderTypeOptions = ['html', 'jpeg', 'png', 'pdf'];

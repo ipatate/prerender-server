@@ -1,9 +1,12 @@
 const express = require('express');
+const helmet = require('helmet');
 const {ssr} = require('./ssr');
 
 const PORT = process.env.PORT || 8000;
 
 const app = express();
+
+app.use(helmet());
 
 export default () => {
   // home default

@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "express": "^4.16.4",
+    "helmet": "^3.14.0",
     "node-cache": "^4.2.0",
     "prerender": "^5.4.4",
     "prerender-memory-cache": "^1.0.2",
