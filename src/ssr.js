@@ -6,7 +6,7 @@ const TTL = process.env.TTL || 5000;
 // networkidle0 - consider navigation to be finished when there are no more than 0 network connections for at least 500 ms.
 // networkidle2 - consider navigation to be finished when there are no more than 2 network connections for at least 500 ms.
 const networkidle = process.env.networkidle || 'networkidle2';
-const browserArg = process.env.browserArg || `'--no-sandbox','--headless'`;
+// const browserArg = process.env.browserArg || `'--no-sandbox','--headless'`;
 
 let browserWSEndpoint = null;
 
@@ -32,7 +32,8 @@ export const getRenderType = (
 const launch = async (): puppeteer.Browser =>
   await puppeteer.launch({
     headless: true,
-    args: browserArg.split(','),
+    args: ['--no-sandbox', '--headless'],
+    // args: browserArg.split(','),
   });
 
 // get page for navigate
