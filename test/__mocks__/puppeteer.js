@@ -1,7 +1,7 @@
-const result = '<html><body></body></html>';
+export const html = '<html><head></head><body></body></html>';
 
 const page = {
-  content: () => Promise.resolve(result),
+  content: () => Promise.resolve(html),
   goto: () => jest.fn,
   close: () => jest.fn,
   setRequestInterception: () => jest.fn,
