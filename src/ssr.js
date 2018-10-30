@@ -1,6 +1,7 @@
 // @flow
 import puppeteer from 'puppeteer';
 import NodeCache from 'node-cache';
+import {addAsync} from './inject';
 
 const TTL = process.env.TTL || 5000;
 // networkidle0 - consider navigation to be finished when there are no more than 0 network connections for at least 500 ms.
@@ -90,10 +91,10 @@ export async function ssr(url: string, renderType: string): Promise<string> {
   const type: string = getRenderType(renderType, renderTypeOptions);
   const keyCache: string = `${url}${type}`;
   // if cache return
-  //   const cacheUrl: ?string = ssrCache.get(keyCache);
-  //   if (cacheUrl !== undefined && cacheUrl !== null) {
-  //     return cacheUrl;
-  //   }
+  const cacheUrl: ?string = ssrCache.get(keyCache);
+  if (cacheUrl !== undefined && cacheUrl !== null) {
+    return cacheUrl;
+  }
   // launch browser and get page
   const page = await getPage();
   // block request for image, css, media
@@ -105,9 +106,14 @@ export async function ssr(url: string, renderType: string): Promise<string> {
     throw err;
   }
 
-  const result = await getResult(type, page);
+  let result = await getResult(type, page);
 
   await page.close();
+
+  // add async on script tags
+  if (type === 'html') {
+    result = addAsync(result);
+  }
   ssrCache.set(keyCache, result); // cache rendered page.
 
   return result;

@@ -21,6 +21,7 @@
     "precommit": "lint-staged && yarn test && yarn flow"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.4",
     "helmet": "^3.14.0",
     "node-cache": "^4.2.0",

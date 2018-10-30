@@ -1,4 +1,5 @@
 import {getRenderType, ssr} from '../src/ssr';
+import {html} from '../test/__mocks__/puppeteer';
 
 test('test getRenderType', () => {
   const types = ['html', 'jpeg', 'png', 'pdf'];
@@ -10,7 +11,7 @@ test('test getRenderType', () => {
 
 test('test ssr function with html', async () => {
   const result = await ssr('/', 'html');
-  expect(result).toBe('<html><body></body></html>');
+  expect(result).toBe(html);
 });
 
 test('test ssr function with jpeg', async () => {
@@ -25,5 +26,5 @@ test('test ssr function with pdf', async () => {
 
 test('test ssr function with no type arg', async () => {
   const result = await ssr('/');
-  expect(result).toBe('<html><body></body></html>');
+  expect(result).toBe(html);
 });
