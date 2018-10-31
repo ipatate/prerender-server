@@ -1,95 +1,26 @@
 // @flow
-import puppeteer from 'puppeteer';
-import NodeCache from 'node-cache';
 import {addAsync} from './inject';
+import initBrowser, {getResultByType} from './browser';
+import {renderType} from './utils';
+import {initCache} from './cache';
 
-const TTL = process.env.TTL || 5000;
+const TTL = +process.env.TTL || 5000;
 // networkidle0 - consider navigation to be finished when there are no more than 0 network connections for at least 500 ms.
 // networkidle2 - consider navigation to be finished when there are no more than 2 network connections for at least 500 ms.
-const networkidle = process.env.networkidle || 'networkidle2';
+const networkidle = process.env.networkidle || 'networkidle0';
 
-let browserWSEndpoint = null;
-
-const ssrCache = new NodeCache({
-  stdTTL: TTL,
-});
-
-const renderTypeOptions = ['html', 'jpeg', 'png', 'pdf'];
-
-// verif if type is allowed
-export const getRenderType = (
-  renderType: string = '',
-  options: Array<string>,
-): string => {
-  let type = 'html';
-  if (options.indexOf(renderType) > -1) {
-    type = renderType;
-  }
-  return type;
-};
-
-// launch browser
-const launch = async (): puppeteer.Browser =>
-  await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--headless'],
-  });
-
-// get page for navigate
-const getPage = async (): puppeteer.Page => {
-  if (!browserWSEndpoint) {
-    const browserAlreadyStarted = await launch();
-    browserWSEndpoint = await browserAlreadyStarted.wsEndpoint();
-  }
-  const browser = await puppeteer.connect({browserWSEndpoint});
-  // new page
-  const page = await browser.newPage();
-
-  return page;
-};
-
-const filterPageRequest = async (page: puppeteer.Page): Promise<void> => {
-  // 1. Intercept network requests.
-  await page.setRequestInterception(true);
-  page.on('request', req => {
-    const whitelist = ['document', 'script', 'xhr', 'fetch'];
-    if (!whitelist.includes(req.resourceType())) {
-      return req.abort();
-    }
-    req.continue();
-  });
-};
-
-// get page format by type
-const getResult = async (
-  type: string,
-  page: puppeteer.Page,
-): Promise<string> => {
-  switch (type) {
-    case 'html':
-      return await page.content();
-    case 'png':
-      return await page.screenshot({
-        type,
-        fullPage: true,
-      });
-    case 'jpeg':
-      return await page.screenshot({
-        type,
-        fullPage: true,
-      });
-    case 'pdf':
-      return await page.pdf();
-    default:
-      return await page.content();
-  }
-};
+// init the browser
+const {getPage, filterPageRequest} = initBrowser();
+// get function for verify type
+const getRenderType = renderType();
+// init cache system
+const cache = initCache(TTL);
 
 export async function ssr(url: string, renderType: string): Promise<string> {
-  const type: string = getRenderType(renderType, renderTypeOptions);
+  const type: string = getRenderType(renderType);
   const keyCache: string = `${url}${type}`;
   // if cache return
-  const cacheUrl: ?string = ssrCache.get(keyCache);
+  const cacheUrl: ?string = cache.get(keyCache);
   if (cacheUrl !== undefined && cacheUrl !== null) {
     return cacheUrl;
   }
@@ -104,7 +35,7 @@ export async function ssr(url: string, renderType: string): Promise<string> {
     throw err;
   }
 
-  let result = await getResult(type, page);
+  let result = await getResultByType(type, page);
 
   await page.close();
 
@@ -112,7 +43,7 @@ export async function ssr(url: string, renderType: string): Promise<string> {
   if (type === 'html') {
     result = addAsync(result);
   }
-  ssrCache.set(keyCache, result); // cache rendered page.
+  cache.set(keyCache, result); // cache rendered page.
 
   return result;
 }

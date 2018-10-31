@@ -1,13 +1,5 @@
-import {getRenderType, ssr} from '../src/ssr';
+import {ssr} from '../src/ssr';
 import {html} from '../test/__mocks__/puppeteer';
-
-test('test getRenderType', () => {
-  const types = ['html', 'jpeg', 'png', 'pdf'];
-  expect(getRenderType('html', types)).toBe('html');
-  expect(getRenderType('png', types)).toBe('png');
-  // type not exist in list types
-  expect(getRenderType('plop', types)).toBe('html');
-});
 
 test('test ssr function with html', async () => {
   const result = await ssr('/', 'html');
