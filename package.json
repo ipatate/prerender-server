@@ -8,17 +8,17 @@
   "scripts": {
     "test": "jest",
     "build:clean": "rimraf ./dist",
-    "start": "yarn build:clean && yarn build && PORT=8000 node index.js",
-    "start:debug": "yarn build:clean && yarn build && PORT=8000 node --inspect-brk index.js",
+    "start": "npm run build:clean && npm run build && PORT=8000 node index.js",
+    "start:debug": "npm run build:clean && npm run build && PORT=8000 node --inspect-brk index.js",
     "build": "babel src --out-dir dist",
-    "dev": "nodemon --watch src --exec \"yarn flow && yarn start\"",
-    "dev:debug": "nodemon --watch src --exec \"yarn flow && yarn start:debug\"",
+    "dev": "nodemon --watch src --exec \"npm run flow && npm run start\"",
+    "dev:debug": "nodemon --watch src --exec \"npm run flow && npm run start:debug\"",
     "lint": "eslint src",
     "flow": "flow",
     "format": "prettier --write \"**/*.+(js|jsx||json|yml|yaml|css|scss|ts|tsx|graphql|vue|mjs)\" ",
     "flow:build": "flow-remove-types ./src/ -d ./dist/ --all --pretty",
-    "validate": "yarn lint && yarn test && yarn flow",
-    "precommit": "lint-staged && yarn test && yarn flow"
+    "validate": "npm run lint && npm run test && npm run flow",
+    "precommit": "lint-staged && npm run test && npm run flow"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",

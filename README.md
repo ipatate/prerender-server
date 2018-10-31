@@ -14,12 +14,12 @@ For your local machine, no problem. Install juste chrome browser.
 # init project
 
 ```
-yarn
+yarn && yarn build
 ```
 or
 
 ```
-npm install
+npm install && npm run build
 ```
 
 For server, you have exemple here [https://blog.softhints.com/ubuntu-16-04-server-install-headless-google-chrome/](https://blog.softhints.com/ubuntu-16-04-server-install-headless-google-chrome/)

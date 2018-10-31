@@ -31,7 +31,7 @@ module.exports = {
   //       ref: 'origin/master',
   //       repo: 'git@github.com:',
   //       path: '/media/www/prerender',
-  //       'post-deploy': 'yarn && pm2 reload ecosystem.config.js'
+  //       'post-deploy': 'yarn && yarn build && pm2 reload ecosystem.config.js',
   //     }
   //   }
 };
