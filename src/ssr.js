@@ -1,9 +1,10 @@
 // @flow
-import {addAsync} from './inject';
-import initBrowser, {getResultByType} from './browser';
+import ping from './utils/ping';
+import {addAsync} from './utils/inject';
+import {initCache} from './utils/cache';
 import {renderType} from './utils/renderType';
 import {validateUrl} from './utils/validate';
-import {initCache} from './cache';
+import initBrowser from './browser/browser';
 
 const TTL = +process.env.TTL || 5000;
 // networkidle0 - consider navigation to be finished when there are no more than 0 network connections for at least 500 ms.
@@ -11,7 +12,9 @@ const TTL = +process.env.TTL || 5000;
 const networkidle = process.env.networkidle || 'networkidle0';
 
 // init the browser
-const {getPage, filterPageRequest} = initBrowser();
+const {getPageByType} = initBrowser({
+  networkidle,
+});
 // get function for verify type
 const getRenderType = renderType();
 // init cache system
@@ -21,33 +24,27 @@ export async function ssr(url: string, renderType: string): Promise<string> {
   if (validateUrl(url) !== true) {
     return Promise.resolve('Url is not valide, dont forget http://');
   }
+  const pingHost = await ping(url);
+  if (pingHost === false) {
+    return Promise.resolve('404 page not found');
+  }
+
   const type: string = getRenderType(renderType);
-  const keyCache: string = `${url}${type}`;
+  const keyCache: string = `${url}-${type}`;
   // if cache return
   const cacheUrl: ?string = cache.get(keyCache);
   if (cacheUrl !== undefined && cacheUrl !== null) {
     return cacheUrl;
   }
-  // launch browser and get page
-  const page = await getPage();
-  // block request for image, css, media
-  filterPageRequest(page);
 
-  try {
-    await page.goto(url, {waitUntil: networkidle});
-  } catch (err) {
-    throw err;
-  }
-
-  let result = await getResultByType(type, page);
-
-  await page.close();
+  // get the page by format type
+  let result = await getPageByType(url, type);
 
   // add async on script tags
-  if (type === 'html') {
+  if (type === 'html' && result !== '') {
     result = addAsync(result);
   }
-  cache.set(keyCache, result); // cache rendered page.
+  if (result !== '') cache.set(keyCache, result); // cache rendered page.
 
   return result;
 }
