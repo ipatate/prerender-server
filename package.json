@@ -24,6 +24,7 @@
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.4",
     "helmet": "^3.14.0",
+    "is-url": "^1.2.4",
     "node-cache": "^4.2.0",
     "prerender": "^5.4.4",
     "prerender-memory-cache": "^1.0.2",

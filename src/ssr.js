@@ -1,7 +1,8 @@
 // @flow
 import {addAsync} from './inject';
 import initBrowser, {getResultByType} from './browser';
-import {renderType} from './utils';
+import {renderType} from './utils/renderType';
+import {validateUrl} from './utils/validate';
 import {initCache} from './cache';
 
 const TTL = +process.env.TTL || 5000;
@@ -17,6 +18,9 @@ const getRenderType = renderType();
 const cache = initCache(TTL);
 
 export async function ssr(url: string, renderType: string): Promise<string> {
+  if (validateUrl(url) !== true) {
+    return Promise.resolve('Url is not valide, dont forget http://');
+  }
   const type: string = getRenderType(renderType);
   const keyCache: string = `${url}${type}`;
   // if cache return
