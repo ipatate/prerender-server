@@ -1,4 +1,4 @@
-import {renderType} from '../src/utils';
+import {renderType} from '../src/utils/renderType';
 
 test('test getRenderType', () => {
   const types = ['html', 'jpeg', 'png', 'pdf'];
