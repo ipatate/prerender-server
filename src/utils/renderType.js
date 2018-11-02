@@ -1,6 +1,6 @@
 // @flow
 
-export const renderType = (
+export const renderType: Function = (
   renderTypeOptions: Array<string> = ['html', 'jpeg', 'png', 'pdf'],
 ): Function => (renderType: string = ''): string => {
   let type = 'html';

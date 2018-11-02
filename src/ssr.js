@@ -1,7 +1,7 @@
 // @flow
 // import ping from './utils/ping';
 import {addAsync} from './utils/inject';
-import {initCache} from './utils/cache';
+import {InitCache} from './utils/cache';
 import {renderType} from './utils/renderType';
 import {validateUrl} from './utils/validate';
 import initBrowser from './browser/browser';
@@ -16,9 +16,9 @@ const {getPageByType} = initBrowser({
   networkidle,
 });
 // get function for verify type
-const getRenderType = renderType();
+const getRenderType: Function = renderType();
 // init cache system
-const cache = initCache(TTL);
+const cache = new InitCache(TTL);
 
 export async function ssr(url: string, renderType: string): Promise<string> {
   if (validateUrl(url) !== true) {

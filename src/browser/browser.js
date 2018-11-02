@@ -58,7 +58,7 @@ const initBrowser = (options: OptionBrowser = {}): Object => {
   };
 
   // return page by type format
-  const getPageByType = async (url: string, type: string) => {
+  const getPageByType = async (url: string, type: string): Promise<string> => {
     // start new page
     await getNewPage();
 
