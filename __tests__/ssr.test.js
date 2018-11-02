@@ -26,7 +26,7 @@ test('url not valid', async () => {
   expect(result).toBe('Url is not valide, dont forget http://');
 });
 
-test('url not exist', async () => {
+test.skip('url not exist', async () => {
   const result = await ssr('http://not-found.com');
   expect(result).toBe('404 page not found');
 });

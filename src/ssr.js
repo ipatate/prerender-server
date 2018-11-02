@@ -1,5 +1,5 @@
 // @flow
-import ping from './utils/ping';
+// import ping from './utils/ping';
 import {addAsync} from './utils/inject';
 import {initCache} from './utils/cache';
 import {renderType} from './utils/renderType';
@@ -24,10 +24,11 @@ export async function ssr(url: string, renderType: string): Promise<string> {
   if (validateUrl(url) !== true) {
     return Promise.resolve('Url is not valide, dont forget http://');
   }
-  const pingHost = await ping(url);
-  if (pingHost === false) {
-    return Promise.resolve('404 page not found');
-  }
+  // bug on server :/
+  //   const pingHost = await ping(url);
+  //   if (pingHost === false) {
+  //     return Promise.resolve('404 page not found');
+  //   }
 
   const type: string = getRenderType(renderType);
   const keyCache: string = `${url}-${type}`;
