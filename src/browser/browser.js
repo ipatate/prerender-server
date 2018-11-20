@@ -17,20 +17,19 @@ const initBrowser = (options: OptionBrowser = {}): Object => {
   let page;
 
   // launch browser
-  const launch = async (): puppeteer.Browser =>
+  const launch = async (): any =>
     await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--headless'],
     });
 
   // get new page
-  const getNewPage = async (
-    withFilterRequest: boolean = true,
-  ): puppeteer.Page => {
+  const getNewPage = async (withFilterRequest: boolean = true): any => {
     if (!browserWSEndpoint) {
       const browserAlreadyStarted = await launch();
       browserWSEndpoint = await browserAlreadyStarted.wsEndpoint();
     }
+    // $FlowFixMe
     const browser = await puppeteer.connect({browserWSEndpoint});
     // new page
     page = await browser.newPage();
