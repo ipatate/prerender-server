@@ -1,5 +1,6 @@
 // @flow
 import puppeteer from 'puppeteer';
+import type {Browser, Page} from 'puppeteer';
 
 // filter type request
 const list = ['document', 'script', 'xhr', 'fetch'];
@@ -17,23 +18,28 @@ const initBrowser = (options: OptionBrowser = {}): Object => {
   let page;
 
   // launch browser
-  const launch = async (): any =>
+  const launch = async (): Promise<Browser> =>
     await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--headless'],
     });
 
   // get new page
-  const getNewPage = async (withFilterRequest: boolean = true): any => {
+  const getNewPage = async (
+    withFilterRequest: boolean = true,
+  ): Promise<Page> => {
     if (!browserWSEndpoint) {
       const browserAlreadyStarted = await launch();
       browserWSEndpoint = await browserAlreadyStarted.wsEndpoint();
     }
+    // flow show error with promise !!
     // $FlowFixMe
-    const browser = await puppeteer.connect({browserWSEndpoint});
+    const browser = await puppeteer.connect({
+      browserWSEndpoint,
+    });
+
     // new page
     page = await browser.newPage();
-
     // filter request
     if (withFilterRequest === true) {
       filterPageRequest();
