@@ -1,6 +1,7 @@
-const express = require('express');
-const helmet = require('helmet');
-const {ssr} = require('./ssr');
+import express from 'express';
+import helmet from 'helmet';
+import {ssr} from './ssr';
+import crawlWebsite from './crawl';
 
 const PORT = process.env.PORT || 8000;
 
@@ -12,6 +13,16 @@ export default () => {
   // home default
   app.get('/', (req, res) => {
     res.send('Hello world');
+  });
+
+  app.get('/createCache', (req, res) => {
+    const url = req.query.url;
+    // no param url
+    if (url === undefined) {
+      return res.send('no url defined !');
+    }
+    crawlWebsite(req.query.url);
+    res.send(`process started for url ${req.query.url}`);
   });
 
   // render ssr

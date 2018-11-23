@@ -5,7 +5,8 @@ const page = {
   goto: () => jest.fn,
   close: () => jest.fn,
   setRequestInterception: () => jest.fn,
-  on: (event, cb) => cb({resourceType: () => 'document', continue: jest.fn}),
+  on: (event, cb) =>
+    cb({resourceType: () => 'document', continue: jest.fn, url: () => ''}),
   screenshot: () => Promise.resolve('picture'),
   pdf: () => Promise.resolve('pdf'),
 };
