@@ -1,4 +1,4 @@
-process.env['CACHE_TTL'] = 5000;
+process.env['CACHE_TTL'] = 500000;
 // const pluginPrerender = require('prerender-node');
 const prerender = require('prerender');
 

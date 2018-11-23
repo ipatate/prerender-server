@@ -1,8 +1,11 @@
 // @flow
 import puppeteer from 'puppeteer';
+import type {Browser, Page} from 'puppeteer';
+import {findInString} from '../utils/filter';
+import {extensionRegex, tiersRegex} from '../utils/regex';
 
 // filter type request
-const list = ['document', 'script', 'xhr', 'fetch'];
+// const list = ['document', 'script', 'xhr', 'fetch'];
 
 type OptionBrowser = {
   whitelist?: Array<string>,
@@ -10,14 +13,21 @@ type OptionBrowser = {
 };
 
 const initBrowser = (options: OptionBrowser = {}): Object => {
-  const requestWhitelist = options.whitelist || list;
+  //   const requestWhitelist = options.whitelist || list;
   const networkidle = options.networkidle || 'networkidle0';
 
+  // find extension in string
+  const findExt = findInString(extensionRegex());
+
+  // find tier service external
+  const findTier = findInString(tiersRegex());
+
   let browserWSEndpoint = null;
+  let browser;
   let page;
 
   // launch browser
-  const launch = async (): puppeteer.Browser =>
+  const launch = async (): Promise<Browser> =>
     await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--headless'],
@@ -26,15 +36,19 @@ const initBrowser = (options: OptionBrowser = {}): Object => {
   // get new page
   const getNewPage = async (
     withFilterRequest: boolean = true,
-  ): puppeteer.Page => {
+  ): Promise<Page> => {
     if (!browserWSEndpoint) {
       const browserAlreadyStarted = await launch();
       browserWSEndpoint = await browserAlreadyStarted.wsEndpoint();
     }
-    const browser = await puppeteer.connect({browserWSEndpoint});
+    // flow show error with promise !!
+    // $FlowFixMe
+    browser = await puppeteer.connect({
+      browserWSEndpoint,
+    });
+
     // new page
     page = await browser.newPage();
-
     // filter request
     if (withFilterRequest === true) {
       filterPageRequest();
@@ -50,7 +64,11 @@ const initBrowser = (options: OptionBrowser = {}): Object => {
   const filterPageRequest = async (): Promise<void> => {
     await page.setRequestInterception(true);
     page.on('request', req => {
-      if (!requestWhitelist.includes(req.resourceType())) {
+      if (
+        // !requestWhitelist.includes(req.resourceType()) ||
+        findTier(req.url()) ||
+        findExt(req.url())
+      ) {
         return req.abort();
       }
       req.continue();
@@ -97,9 +115,13 @@ const initBrowser = (options: OptionBrowser = {}): Object => {
     }
   };
 
+  const close = async (): Promise<void> => await browser.close();
+
   return {
+    getNewPage,
     getPageByType,
     getResultByType,
+    close,
   };
 };
 
