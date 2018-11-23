@@ -1,13 +1,11 @@
 // @flow
-import fse from 'fs-extra';
 import perfExecut from 'execution-time';
 import {URL} from 'url';
 import initBrowser from './browser/browser';
 import {urlToRegex} from './utils/regex';
 import {escapeString, findInString} from './utils/filter';
-import {getKeyCache} from './utils/keyCache';
 import {extensionRegex} from './utils/regex';
-
+import {InitCache} from './cache/cacheFile';
 // for calulate time execution
 const perf = perfExecut();
 
@@ -25,6 +23,9 @@ const findExt = findInString(extensionRegex());
 
 async function crawlWebsite(urlToFetch: string): Promise<void> {
   perf.start('site');
+  // init cache system
+  const cache = new InitCache();
+
   const {getNewPage, close} = initBrowser();
   // url base
   const url = new URL(urlToFetch);
@@ -84,10 +85,7 @@ async function crawlWebsite(urlToFetch: string): Promise<void> {
     const content = await page.content();
 
     // save content page in file
-    fse.outputFileSync(
-      `${__dirname}/../cache/${getKeyCache(urlPage)}`,
-      content,
-    );
+    cache.set(urlPage, content);
 
     // add page visited
     alreadyVisited.add(urlPage);

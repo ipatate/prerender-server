@@ -1,7 +1,8 @@
 // @flow
 // import ping from './utils/ping';
 import {addAsync} from './utils/inject';
-import {InitCache} from './utils/cache';
+import {InitCache as InitCacheMemory} from './cache/cacheMemory';
+import {InitCache as InitCacheFile} from './cache/cacheFile';
 import {renderType} from './utils/renderType';
 import {validateUrl} from './utils/validate';
 import initBrowser from './browser/browser';
@@ -18,7 +19,8 @@ const {getPageByType} = initBrowser({
 // get function for verify type
 const getRenderType: Function = renderType();
 // init cache system
-const cache = new InitCache(TTL);
+const cacheMemory = new InitCacheMemory(TTL);
+const cacheFile = new InitCacheFile();
 
 export async function ssr(url: string, renderType: string): Promise<string> {
   if (validateUrl(url) !== true) {
@@ -33,7 +35,12 @@ export async function ssr(url: string, renderType: string): Promise<string> {
   const type: string = getRenderType(renderType);
   const keyCache: string = `${url}-${type}`;
   // if cache return
-  const cacheUrl: ?string = cache.get(keyCache);
+  let cacheUrl: ?string;
+  if (type === 'html') {
+    cacheUrl = cacheFile.get(url);
+  } else {
+    cacheUrl = cacheMemory.get(keyCache);
+  }
   if (cacheUrl !== undefined && cacheUrl !== null) {
     return cacheUrl;
   }
@@ -45,7 +52,12 @@ export async function ssr(url: string, renderType: string): Promise<string> {
   if (type === 'html' && result !== '') {
     result = addAsync(result);
   }
-  if (result !== '') cache.set(keyCache, result); // cache rendered page.
+
+  if (type === 'html') {
+    if (result !== '') cacheFile.set(keyCache, result); // cache rendered page.
+  } else {
+    if (result !== '') cacheMemory.set(url, result); // cache rendered page.
+  }
 
   return result;
 }
