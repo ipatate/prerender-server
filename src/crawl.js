@@ -6,6 +6,8 @@ import {urlToRegex} from './utils/regex';
 import {escapeString, findInString} from './utils/filter';
 import {extensionRegex} from './utils/regex';
 import {InitCache} from './cache/cacheFile';
+import {InitCache as InitCacheMemory} from './cache/cacheMemory';
+
 // for calulate time execution
 const perf = perfExecut();
 
@@ -32,7 +34,8 @@ async function crawlWebsite(urlToFetch: string): Promise<void> {
   const rootUrl = url.protocol + '//' + url.host;
   const host = url.hostname;
   const protocol = url.protocol;
-
+  // init cache system
+  const cacheMemory = new InitCacheMemory(300);
   const hostSearch = getHostSearch(protocol + '//' + host);
 
   // find host in string func
@@ -41,7 +44,7 @@ async function crawlWebsite(urlToFetch: string): Promise<void> {
   async function scrap(urlPage: string): Promise<boolean> {
     perf.start('page');
     // open new page
-    const page = await getNewPage();
+    const page = await getNewPage(true, cacheMemory);
 
     try {
       // open page

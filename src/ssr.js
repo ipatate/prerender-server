@@ -35,12 +35,9 @@ export async function ssr(url: string, renderType: string): Promise<string> {
   const type: string = getRenderType(renderType);
   const keyCache: string = `${url}-${type}`;
   // if cache return
-  let cacheUrl: ?string;
-  if (type === 'html') {
-    cacheUrl = cacheFile.get(url);
-  } else {
-    cacheUrl = cacheMemory.get(keyCache);
-  }
+  let cacheUrl: ?string =
+    type === 'html' ? cacheFile.get(url) : cacheMemory.get(keyCache);
+
   if (cacheUrl !== undefined && cacheUrl !== null) {
     return cacheUrl;
   }

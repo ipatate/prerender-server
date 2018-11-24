@@ -36,6 +36,7 @@ const initBrowser = (options: OptionBrowser = {}): Object => {
   // get new page
   const getNewPage = async (
     withFilterRequest: boolean = true,
+    cache: ?Object = null,
   ): Promise<Page> => {
     if (!browserWSEndpoint) {
       const browserAlreadyStarted = await launch();
@@ -51,7 +52,7 @@ const initBrowser = (options: OptionBrowser = {}): Object => {
     page = await browser.newPage();
     // filter request
     if (withFilterRequest === true) {
-      filterPageRequest();
+      filterPageRequest(cache);
     }
 
     return page;
@@ -61,17 +62,39 @@ const initBrowser = (options: OptionBrowser = {}): Object => {
   const closePage = async (): Promise<void> => await page.close();
 
   // Intercept network requests.
-  const filterPageRequest = async (): Promise<void> => {
+  const filterPageRequest = async (cache: ?Object): Promise<void> => {
     await page.setRequestInterception(true);
     page.on('request', req => {
+      const url = req.url();
       if (
         // !requestWhitelist.includes(req.resourceType()) ||
-        findTier(req.url()) ||
-        findExt(req.url())
+        findTier(url) ||
+        findExt(url)
       ) {
         return req.abort();
       }
+      // return cache if exist for js and css
+      if (cache && (req.url().endsWith('.js') || req.url().endsWith('.css'))) {
+        const c = cache.get(url);
+        if (c !== undefined && c !== null) {
+          return req.respond({
+            status: 200,
+            body: c,
+          });
+        }
+      }
       req.continue();
+    });
+    page.on('response', async res => {
+      // set response in cache if js and css
+      if (
+        res.status() === 200 &&
+        cache &&
+        (res.url().endsWith('.js') || res.url().endsWith('.css'))
+      ) {
+        const body = await res.text();
+        cache.set(res.url(), body);
+      }
     });
   };
 

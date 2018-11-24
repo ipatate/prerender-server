@@ -6,7 +6,12 @@ const page = {
   close: () => jest.fn,
   setRequestInterception: () => jest.fn,
   on: (event, cb) =>
-    cb({resourceType: () => 'document', continue: jest.fn, url: () => ''}),
+    cb({
+      resourceType: () => 'document',
+      continue: jest.fn,
+      status: () => 200,
+      url: () => '',
+    }),
   screenshot: () => Promise.resolve('picture'),
   pdf: () => Promise.resolve('pdf'),
 };
