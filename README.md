@@ -7,6 +7,8 @@ It use a google chrome headless for generate html.
 
 You have htaccess example for your web app server. Others examples for nginx are available on the github repo : [https://github.com/prerender/prerender](https://github.com/prerender/prerender)
 
+Article blog [french] [https://www.goodmotion.fr/blog/installer-un-serveur-prerender-pour-ameliorer-le-seo-de-votre-web-app](https://www.goodmotion.fr/blog/installer-un-serveur-prerender-pour-ameliorer-le-seo-de-votre-web-app)
+
 # install chrome on machine is required
 
 For your local machine, no problem. Install juste chrome browser.
@@ -45,6 +47,8 @@ exemple for run cron every hour
 ```
 
 For server, you have exemple here [https://blog.softhints.com/ubuntu-16-04-server-install-headless-google-chrome/](https://blog.softhints.com/ubuntu-16-04-server-install-headless-google-chrome/)
+or
+[https://tecadmin.net/setup-selenium-chromedriver-on-ubuntu/](https://tecadmin.net/setup-selenium-chromedriver-on-ubuntu/)
 
 ## 1 - example with express server and puppeteer. Actually index.js and ssr.js
 
