@@ -1,6 +1,9 @@
 // @flow
 import perfExecut from 'execution-time';
 import {URL} from 'url';
+import consola from 'consola';
+import figures from 'figures';
+import colors from 'colors';
 import initBrowser from './browser/browser';
 import {urlToRegex} from './utils/regex';
 import {escapeString, findInString} from './utils/filter';
@@ -10,6 +13,18 @@ import {InitCache as InitCacheMemory} from './cache/cacheMemory';
 
 // for calulate time execution
 const perf = perfExecut();
+
+// color for console
+const getColor = (time, su = 'ms') => {
+  const timeRound = Math.round(time);
+  if (timeRound < 3000) {
+    return colors.green(time + su);
+  } else if (timeRound < 5000) {
+    return colors.yellow(time + su);
+  } else {
+    return colors.yellow(time + su);
+  }
+};
 
 // page not visited
 const noVisited: Set<string> = new Set();
@@ -50,7 +65,7 @@ async function crawlWebsite(urlToFetch: string): Promise<void> {
       // open page
       await page.goto(urlPage, {waitUntil: 'networkidle0'});
     } catch (e) {
-      console.log(e); // eslint-disable-line
+      consola.error(e);
     }
 
     // catch all href link in page open
@@ -98,7 +113,11 @@ async function crawlWebsite(urlToFetch: string): Promise<void> {
     await page.close();
 
     const results = perf.stop('page');
-    console.log(`${urlPage} visited | ${results.time.toFixed(2)}ms`); // eslint-disable-line
+    consola.success(
+      `${colors.blue(urlPage)} visited ${figures.pointer} ${getColor(
+        results.time.toFixed(2),
+      )}`,
+    );
     // noVisited not empty call new page or end
     if (noVisited.size > 0) {
       const nextUrl = noVisited.values().next().value;
@@ -114,7 +133,11 @@ async function crawlWebsite(urlToFetch: string): Promise<void> {
   // first page open
   await scrap(rootUrl);
   const results = perf.stop('site');
-  console.log(`website ${rootUrl} visited in ${results.time.toFixed(2)}ms`); // eslint-disable-line
+  consola.success(
+    `${colors.green(
+      `all url crawlable for ${rootUrl} visited ${figures.pointer}`,
+    )} ${colors.rainbow(results.time.toFixed(2) + 'ms')}`,
+  );
   close();
 }
 
