@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/ipatate/prerender-server-example.svg?branch=master)](https://travis-ci.org/ipatate/prerender-server-example)
 
-# Example prerender server for web app
+# Prerender server for web app
 
 If crawler visit your web app, the htaccess return prerender response instead web app response. The prerender return the html complete.
 It use a google chrome headless for generate html.
@@ -14,12 +14,34 @@ For your local machine, no problem. Install juste chrome browser.
 # init project
 
 ```
-yarn && yarn build
+npm i && npm run build
 ```
-or
+
+# use precache crawler system
+
+Set task cron for create file caches. The crawler create page for all page from website. Later, the prerender server serve file cache. Increase speed for serve page.
 
 ```
-npm install && npm run build
+./crawler.js
+
+Usage: crawler [options]
+
+Options:
+  -V, --version    output the version number
+  -u, --url [url]  url to crawl
+  -h, --help       output usage information
+```
+
+set url for crawl website and save url in file cache
+
+```
+./crawler.js -u https://www.exemple.com
+```
+
+exemple for run cron every hour
+
+```
+0 * * * *   /your/path/server/crawler.js -u https://www.exemple.com
 ```
 
 For server, you have exemple here [https://blog.softhints.com/ubuntu-16-04-server-install-headless-google-chrome/](https://blog.softhints.com/ubuntu-16-04-server-install-headless-google-chrome/)
