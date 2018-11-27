@@ -1,5 +1,6 @@
-import {ssr} from '../src/ssr';
+import {ssr, init} from '../src/ssr';
 import {html} from '../test/__mocks__/puppeteer';
+const {close} = init();
 
 test('test ssr function with html', async () => {
   const result = await ssr('http://exemple.com', 'html');
@@ -29,4 +30,8 @@ test('url not valid', async () => {
 test.skip('url not exist', async () => {
   const result = await ssr('http://not-found.com');
   expect(result).toBe('404 page not found');
+});
+
+test('close', () => {
+  close();
 });

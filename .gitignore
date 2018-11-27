@@ -16,3 +16,4 @@ cache-file
 coverage
 dist/
 ecosystem.config.js
+.vscode
