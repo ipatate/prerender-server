@@ -138,7 +138,12 @@ const initBrowser = (options: OptionBrowser = {}): Object => {
     }
   };
 
-  const close = async (): Promise<void> => await browser.close();
+  const close = async (cb: ?Function): Promise<Function | void> => {
+    if (browser !== undefined) {
+      await browser.close();
+    }
+    return cb ? cb() : undefined;
+  };
 
   return {
     getNewPage,
