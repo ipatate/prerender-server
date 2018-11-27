@@ -149,3 +149,9 @@ params :
 ```
 curl http://localhost:8000/render?url=http://exemple.com&renderType=jpg -w %{time_connect}:%{time_starttransfer}:%{time_total}
 ```
+
+On linux, kill all chrome instance
+
+```
+pkill chrome
+```
