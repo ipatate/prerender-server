@@ -132,13 +132,13 @@ async function crawlWebsite(urlToFetch: string): Promise<void> {
   }
   // first page open
   await scrap(rootUrl);
+  await close(() => consola.info('close browser :)'));
   const results = perf.stop('site');
   consola.success(
     `${colors.green(
       `all url crawlable for ${rootUrl} visited ${figures.pointer}`,
     )} ${colors.rainbow(results.time.toFixed(2) + 'ms')}`,
   );
-  close();
 }
 
 export default crawlWebsite;
