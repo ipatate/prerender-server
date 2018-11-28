@@ -1,6 +1,6 @@
 {
   "name": "prerender-exemple",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Example prerender server for render html from web app. Used for SEO robot.",
   "main": "index.js",
   "author": "Faramaz Patrick",
