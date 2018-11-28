@@ -11,7 +11,6 @@ const app = express();
 app.use(helmet());
 
 export default () => {
-  //   const {close} = init();
   // home default
   app.get('/', (req, res) => {
     res.send('Hello world');

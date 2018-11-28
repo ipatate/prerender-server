@@ -11,15 +11,6 @@ const TTL = +process.env.TTL || 5000;
 // networkidle2 - consider navigation to be finished when there are no more than 2 network connections for at least 500 ms.
 const networkidle = process.env.networkidle || 'networkidle0';
 
-// init the browser in index for get close
-// let getPageByType;
-// export const init = () => {
-//   const browser = initBrowser({
-//     networkidle,
-//   });
-//   getPageByType = browser.getPageByType;
-//   return {close: browser.close};
-// };
 // get function for verify type
 const getRenderType: Function = renderType();
 // init cache system
@@ -40,6 +31,8 @@ export async function ssr(url: string, renderType: string): Promise<string> {
   if (cacheUrl !== undefined && cacheUrl !== null) {
     return cacheUrl;
   }
+
+  // start browser
   const {getPageByType, close} = initBrowser({
     networkidle,
   });
@@ -58,6 +51,7 @@ export async function ssr(url: string, renderType: string): Promise<string> {
     if (result !== '') cacheMemory.set(url, result); // cache rendered page.
   }
 
+  // close browser
   close();
 
   return result;
