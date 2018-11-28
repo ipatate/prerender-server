@@ -1,5 +1,4 @@
 // @flow
-// import ping from './utils/ping';
 import {addAsync} from './utils/inject';
 import {InitCache as InitCacheMemory} from './cache/cacheMemory';
 import {InitCache as InitCacheFile} from './cache/cacheFile';
@@ -13,14 +12,14 @@ const TTL = +process.env.TTL || 5000;
 const networkidle = process.env.networkidle || 'networkidle0';
 
 // init the browser in index for get close
-let getPageByType;
-export const init = () => {
-  const browser = initBrowser({
-    networkidle,
-  });
-  getPageByType = browser.getPageByType;
-  return {close: browser.close};
-};
+// let getPageByType;
+// export const init = () => {
+//   const browser = initBrowser({
+//     networkidle,
+//   });
+//   getPageByType = browser.getPageByType;
+//   return {close: browser.close};
+// };
 // get function for verify type
 const getRenderType: Function = renderType();
 // init cache system
@@ -31,11 +30,6 @@ export async function ssr(url: string, renderType: string): Promise<string> {
   if (validateUrl(url) !== true) {
     return Promise.resolve('Url is not valide, dont forget http://');
   }
-  // bug on server :/
-  //   const pingHost = await ping(url);
-  //   if (pingHost === false) {
-  //     return Promise.resolve('404 page not found');
-  //   }
 
   const type: string = getRenderType(renderType);
   const keyCache: string = `${url}-${type}`;
@@ -46,6 +40,9 @@ export async function ssr(url: string, renderType: string): Promise<string> {
   if (cacheUrl !== undefined && cacheUrl !== null) {
     return cacheUrl;
   }
+  const {getPageByType, close} = initBrowser({
+    networkidle,
+  });
 
   // get the page by format type
   let result = await getPageByType(url, type);
@@ -60,6 +57,8 @@ export async function ssr(url: string, renderType: string): Promise<string> {
   } else {
     if (result !== '') cacheMemory.set(url, result); // cache rendered page.
   }
+
+  close();
 
   return result;
 }

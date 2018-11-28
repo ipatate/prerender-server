@@ -42,11 +42,17 @@ const initBrowser = (options: OptionBrowser = {}): Object => {
       const browserAlreadyStarted = await launch();
       browserWSEndpoint = await browserAlreadyStarted.wsEndpoint();
     }
-    // flow show error with promise !!
-    // $FlowFixMe
-    browser = await puppeteer.connect({
-      browserWSEndpoint,
-    });
+
+    try {
+      // flow show error with promise !!
+      // $FlowFixMe
+      browser = await puppeteer.connect({
+        browserWSEndpoint,
+      });
+    } catch (e) {
+      const browserAlreadyStarted = await launch();
+      browserWSEndpoint = await browserAlreadyStarted.wsEndpoint();
+    }
 
     // new page
     page = await browser.newPage();

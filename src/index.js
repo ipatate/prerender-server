@@ -1,7 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import consola from 'consola';
-import {ssr, init} from './ssr';
+import {ssr} from './ssr';
 // import crawlWebsite from './crawl';
 
 const PORT = process.env.PORT || 8000;
@@ -11,7 +11,7 @@ const app = express();
 app.use(helmet());
 
 export default () => {
-  const {close} = init();
+  //   const {close} = init();
   // home default
   app.get('/', (req, res) => {
     res.send('Hello world');
@@ -58,20 +58,14 @@ export default () => {
   });
 
   process.on('SIGTERM', () => {
-    close(() => {
-      consola.info('browser closed');
-      server.close(() => {
-        consola.info('Http server closed.');
-      });
+    server.close(() => {
+      consola.info('Http server closed.');
     });
   });
 
   process.on('SIGINT', () => {
-    close(() => {
-      consola.info('browser closed'); // eslint-disable-line
-      server.close(() => {
-        consola.info('Http server closed.');
-      });
+    server.close(() => {
+      consola.info('Http server closed.');
     });
   });
 };
