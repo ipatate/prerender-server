@@ -37,7 +37,7 @@
     "prerender-memory-cache": "^1.0.2",
     "prerender-node": "^3.2.1",
     "prerender-redis-cache": "^0.2.0",
-    "puppeteer": "^1.11.0",
+    "puppeteer": "^1.13.0",
     "puppeteer-prerender": "^0.6.3"
   },
   "devDependencies": {
